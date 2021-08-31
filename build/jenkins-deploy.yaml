@@ -15,6 +15,8 @@ spec:
       - name: jenkins-deployjenkins-deploy
         image: jenkins
         imagePullPolicy: Never
+        securityContext:
+          privileged: true
         resources:
           limits:
             memory: "2Gi"
@@ -26,6 +28,9 @@ spec:
             name: jenkins-volume
           - name: dockersock
             mountPath: "/var/run/docker.sock"
+          - name: github-ssh
+            mountPath: /var/gitssh
+            readOnly: true
       volumes:
         - name: jenkins-volume
           persistentVolumeClaim:
@@ -33,3 +38,7 @@ spec:
         - name: dockersock
           hostPath:
             path: /var/run/docker.sock
+        - name: github-ssh
+          secret:
+            defaultMode: 420
+            secretName: gitssh

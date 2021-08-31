@@ -22,11 +22,13 @@ While not requested in the demo brief, a publicly visible [Azure DevOps Project 
 - [Sample app](https://tomcat.apache.org/tomcat-8.5-doc/appdev/sample/) is expected to run unmodified.
 - 
 
+## Loose ends
 
+1. I was trying for a f
 
 ## Optional Extras
 
 .. nobody asked for, but still fun to do ..
 
-1. Do a ngrok tunnel to make the app visible to the public Internet
-2. Output Snyk scan results in the reports output.
+1. Added Powershell Core to the Jenkins Docker image (I just prefer it for scripting)
+

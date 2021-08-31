@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp-deploy
+spec:
+  selector:
+    matchLabels:
+      app: sampleapp-deploy
+  template:
+    metadata:
+      labels:
+        app: sampleapp-deploy
+    spec:
+      containers:
+      - name: sampleapp-deploysampleapp-deploy
+        image: sampleapp
+        envFrom:
+        - secretRef:
+            name: sampleapp-secret
+        imagePullPolicy: Never
+        securityContext:
+          privileged: true
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        volumeMounts:
+          - mountPath: /opt/bitnami/tomcat/logs
+            name: sampleapp-volume
+      volumes:
+        - name: sampleapp-volume
+          persistentVolumeClaim:
+            claimName: sampleapp-pvc
