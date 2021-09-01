@@ -1,3 +1,4 @@
+// I couldn't get a Groove formatter up and running in VS code - needs formatting
 pipeline {
     agent any
 
@@ -18,38 +19,16 @@ pipeline {
                 // Docker Build - to local image only
                 sh 'docker build -f ./src/Dockerfile -t sampleapp:latest .'
 
-                
-                // Kubectl to start stop the container (would have been an apply)
-                sh 'kubectl scale deployment [deployment_name] --replicas=0'
-                sh 'kubectl scale deployment [deployment_name] --replicas=1'
-                // Run Maven on a Unix agent.
-                // sh "mvn -Dmaven.test.failure.ignore=true clean package"
-
-                // To run Maven on a Windows agent, use
-                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
-
-            // post {
-            //     // If Maven was able to run the tests, even if some of the test
-            //     // failed, record the test results and archive the jar file.
-            //     success {
-            //         junit '**/target/surefire-reports/TEST-*.xml'
-            //         archiveArtifacts 'target/*.jar'
-            //     }
-            // }
-
         }
-    }
-            stage('Deploy') {
+   stage('Deploy') {
             steps {
                 
                 // Kubectl to start stop the container (would have been an apply)
-                sh 'kubectl scale deployment [deployment_name] --replicas=0'
-                sh 'kubectl scale deployment [deployment_name] --replicas=1'
+                sh 'kubectl scale deployment sampleapp-deploy --replicas=0'
+                sh 'kubectl scale deployment sampleapp-deploy --replicas=1'
 
             }
-
-
-        }
     }
+  }
 }

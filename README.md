@@ -42,6 +42,10 @@ In Jenkins, add a github ssh credential to your forked repo
 
 Create a new Pipeline, using the contents of the Jenkinsfile in this repo, and update to your forked repo address.
 
+Jenkins builds and deploys the ./src/Dockerfile and updates a k8s deployment in the local cluster which can be accessed through https://localhost:30810/sample/
+
+![image-20210901131904263](./doc/images/README/image-20210901131904263.png)
+
 ## Known loose ends
 
 1. The original goal was to set up a ephemeral Jenkins builder job that would run as a k8s cronjob with everything defined from source. Moved to backlog for now.
