@@ -1,7 +1,9 @@
 # java-jenkins-techdemo
+> This project is purely intended as a sandbox demonstration environment for creating a containerised CI/CD pipeline with Jenkins for a sample Java app. Nothing in here should be used anywhere other than in a local testing environment for educational purposes.
+
 A simple Jenkins pipeline for a sample Java app.
 
-While not requested in the demo brief, a publicly visible [Azure DevOps Project jenkins-java-techdemo](https://dev.azure.com/cronjevh-techdemo/jenkins-java-techdemo) was created for this demo. (Using project management tools saves more time in the long run)
+
 
 ## Jenkins Pipeline
 
@@ -14,21 +16,43 @@ While not requested in the demo brief, a publicly visible [Azure DevOps Project 
 
 <u>Toolset</u>
 
-- Github for source control
-- Minikube (using integrated version of Docker for Windows on WSL2)
+- Github for source control (this repo)
+- Minikube (shown using integrated version of Docker for Windows on WSL2)
+- Azure DevOps Public Project [jenkins-java-techdemo](https://dev.azure.com/cronjevh-techdemo/jenkins-java-techdemo) for work tracking band backlog.
+- [Typora](https://typora.io/) for markdown formatting
 
 <u>Assumptions</u>
 
-- [Sample app](https://tomcat.apache.org/tomcat-8.5-doc/appdev/sample/) is expected to run unmodified.
-- 
+- [Tomcat Sample app](https://tomcat.apache.org/tomcat-8.5-doc/appdev/sample/) is expected to run unmodified. 
 
-## Loose ends
+## Usage
 
-1. I was trying for a f
+Fork this project .. 
+
+Assuming Powershell is available, with a kubectl context set to local Kubernetes
+
+```powershell
+cd .\build
+.\run-jenkins-in-kubernetes.ps1 # Builds Dockerfile and deploy to k8s
+```
+
+Once completed, and the pod is running, you can connect to http://localhost:30808 to get to Jenkins Interface
+
+In Jenkins, add a github ssh credential to your forked repo
+
+Create a new Pipeline, using the contents of the Jenkinsfile in this repo, and update to your forked repo address.
+
+## Known loose ends
+
+1. The original goal was to set up a ephemeral Jenkins builder job that would run as a k8s cronjob with everything defined from source. Moved to backlog for now.
+2. The hardcoded self-signed certificate is unsecure. An attempt was made to have this automatically generated during the Docker build process. For local environment testing demonstration purposes the hardcoded keystorepass is deemed to acceptable low risk.
+3. Dockerfiles should included automated test suites - there's little to test at this stage.
+4. [Snyk Docker security scans](https://dev.azure.com/cronjevh-techdemo/jenkins-java-techdemo/_workitems/edit/18) should be included as part of the Docker build process.
 
 ## Optional Extras
 
 .. nobody asked for, but still fun to do ..
 
-1. Added Powershell Core to the Jenkins Docker image (I just prefer it for scripting)
+1. Added Powershell Core to the Jenkins Docker image (I just prefer it for scripting, although it turned out I didn't use)
+2. A publicly visible [Azure DevOps Project jenkins-java-techdemo](https://dev.azure.com/cronjevh-techdemo/jenkins-java-techdemo) was created for this demo. (Using project management tools saves more time in the long run)
 

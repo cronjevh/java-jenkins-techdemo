@@ -9,12 +9,19 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+              // Git fetch from main brain
               git(
                    url: 'git@github.com:cronjevh/java-jenkins-techdemo.git',
                    credentialsId: 'github-ssh',
                    branch: "main"
               )
+                // Docker Build - to local image only
                 sh 'docker build -f ./src/Dockerfile -t sampleapp:latest .'
+
+                
+                // Kubectl to start stop the container (would have been an apply)
+                sh 'kubectl scale deployment [deployment_name] --replicas=0'
+                sh 'kubectl scale deployment [deployment_name] --replicas=1'
                 // Run Maven on a Unix agent.
                 // sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
@@ -30,6 +37,18 @@ pipeline {
             //         archiveArtifacts 'target/*.jar'
             //     }
             // }
+
+        }
+    }
+            stage('Deploy') {
+            steps {
+                
+                // Kubectl to start stop the container (would have been an apply)
+                sh 'kubectl scale deployment [deployment_name] --replicas=0'
+                sh 'kubectl scale deployment [deployment_name] --replicas=1'
+
+            }
+
 
         }
     }
