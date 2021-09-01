@@ -27,4 +27,4 @@ Alternatives architectures considered
 
 High level architecture for a standard Kubernetes deployment depicted underneath.
 
-![](./src/images/URL Shortener Diagram.svg)
+![](./doc/images/URL Shortener Diagram.svg)
