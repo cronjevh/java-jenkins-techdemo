@@ -5,7 +5,7 @@ podTemplate {
             git(
                 url: 'git@github.com:cronjevh/java-jenkins-techdemo.git',
                 credentialsId: 'github-ssh',
-                branch: 'main'
+                branch: 'extra-time'
               )
         }
 
