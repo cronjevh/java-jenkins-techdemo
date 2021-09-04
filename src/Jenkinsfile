@@ -1,23 +1,18 @@
 podTemplate {
     node(POD_LABEL) {
-    stage('Checkout Source') {
-      steps {
-              // Git fetch from main branch
-              git(
-                   url: 'git@github.com:cronjevh/java-jenkins-techdemo.git',
-                   credentialsId: 'github-ssh',
-                   branch: "main"
+        stage('Checkout Source') {
+            // Git fetch from main branch
+            git(
+                url: 'git@github.com:cronjevh/java-jenkins-techdemo.git',
+                credentialsId: 'github-ssh',
+                branch: 'main'
               )
-      }
-    }
-    
-        stage('Build') {
-            steps {
-                // Docker Build - to local image only
-                // sh 'docker build -f ./src/Dockerfile -t sampleapp:latest .'
-                sh 'echo Building'
+        }
 
-            }
+        stage('Build') {
+            // Docker Build - to local image only
+            // sh 'docker build -f ./src/Dockerfile -t sampleapp:latest .'
+            sh 'echo Building'
         }
     }
 }
