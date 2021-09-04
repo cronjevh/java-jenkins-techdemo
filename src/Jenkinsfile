@@ -12,22 +12,16 @@ labels:
 spec:
   # Use service account that can deploy to all namespaces
   containers:
-  - name: maven
-    image: maven:latest
+  - name: agent-custom
+    image: cronjevh/agent-custom:latest
     command:
     - cat
     tty: true
     volumeMounts:
       - mountPath: "/root/.m2"
         name: m2
-  - name: docker
-    image: docker:latest
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-sock
+      - mountPath: /var/run/docker.sock
+        name: docker-sock
   volumes:
     - name: docker-sock
       hostPath:
@@ -41,7 +35,7 @@ spec:
   stages {
     stage('Build') {
       steps {
-        container('maven') {
+        container('agent-custom') {
           sh """
                 cd ./src/mavenitis && mvn exec:exec -q -Dexec.executable=docker-build.sh
                                                 """
@@ -50,14 +44,14 @@ spec:
     }
     stage('Test') {
       steps {
-        container('maven') {
+        container('agent-custom') {
           sh """
             echo run tests
           """
         }
       }
     }
-    stage('Deploy') {
+    stage('agent-custom') {
     steps {
         container('docker') {
           sh """
