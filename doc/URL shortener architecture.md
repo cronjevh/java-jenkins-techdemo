@@ -4,7 +4,7 @@
 
 Deploying the [yourls](https://yourls.org/) open source PHP based project to an existing Kubernetes cluster is proposed for a quickly attainable working service with established security and reliability parameters.
 
-Alternatives architectures considered
+Alternative architectures considered
 
 | Alternative                      | Description                                                  |
 | -------------------------------- | ------------------------------------------------------------ |
