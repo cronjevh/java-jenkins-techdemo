@@ -51,9 +51,9 @@ spec:
         }
       }
     }
-    stage('agent-custom') {
+    stage('Deploy') {
     steps {
-        container('docker') {
+        container('agent-custom') {
           sh """
              kubectl scale deployment sampleapp-deploy --replicas=0 && kubectl scale deployment sampleapp-deploy --replicas=1
           """
