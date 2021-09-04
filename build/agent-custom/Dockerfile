@@ -1,28 +1,30 @@
-FROM jenkins/inbound-agent:alpine as jnlp
-
-FROM maven:3.6.3-jdk-11-slim
-
-RUN apt-get update && \
-    apt-get install -y \
-        git \
-        libfontconfig1 \
-        libfreetype6 && \
-    apt-get upgrade -y curl
-
-COPY --from=jnlp /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-agent
-COPY --from=jnlp /usr/share/jenkins/agent.jar /usr/share/jenkins/agent.jar
+FROM jenkins/jnlp-agent-docker:latest
 
 USER root
 
-# Install Docker client
-ARG DOCKER_VERSION=18.03.0-ce
-ARG DOCKER_COMPOSE_VERSION=1.21.0
-RUN curl -fsSL https://download.docker.com/linux/static/stable/`uname -m`/docker-$DOCKER_VERSION.tgz | tar --strip-components=1 -xz -C /usr/local/bin docker/docker
-RUN curl -fsSL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+ARG REFRESHED_AT
+ENV REFRESHED_AT $REFRESHED_AT
 
-RUN touch /debug-flag
+ARG MAVEN_VERSION=3.6.3
+ARG USER_HOME_DIR="/root"
+ARG MAVEN_SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
+ARG MAVEN_BASE_URL=https://ftp.halifax.rwth-aachen.de/apache/maven/maven-3/${MAVEN_VERSION}/binaries
 
-COPY --from=bitnami/kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
-RUN chmod +x /usr/local/bin/kubectl
+SHELL ["/bin/sh", "-o", "pipefail", "-c"]
 
-ENTRYPOINT ["/usr/local/bin/jenkins-agent"]exit
+RUN apk add --no-cache \
+  curl
+
+# Maven depends on openjdk8-jre, so a manual installation is necessary
+# hadolint ignore=DL4006
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+  && curl -fsSL -o /tmp/apache-maven.tar.gz ${MAVEN_BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+  && echo "${MAVEN_SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
+  && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
+  && rm -f /tmp/apache-maven.tar.gz \
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
+ENTRYPOINT ["/usr/local/bin/jenkins-agent"]

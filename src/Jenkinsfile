@@ -39,11 +39,11 @@ spec:
 }
    }
   stages {
-    stage('Maven Build') {
+    stage('Build') {
       steps {
         container('maven') {
           sh """
-                        echo do mvn build
+                cd ./src/mavenitis && mvn exec:exec -q -Dexec.executable=docker-build.sh
                                                 """
         }
       }
@@ -52,16 +52,16 @@ spec:
       steps {
         container('maven') {
           sh """
-            echo run test
+            echo run tests
           """
         }
       }
     }
-    stage('Docker Build') {
+    stage('Deploy') {
     steps {
         container('docker') {
           sh """
-             docker build -f ./src/Dockerfile -t sampleapp:$BUILD_NUMBER .
+             kubectl scale deployment sampleapp-deploy --replicas=0 && kubectl scale deployment sampleapp-deploy --replicas=1
           """
         }
       }
