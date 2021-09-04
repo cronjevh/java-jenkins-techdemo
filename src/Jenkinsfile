@@ -37,7 +37,7 @@ spec:
       steps {
         container('agent-custom') {
           sh """
-                cd ./src/mavenitis && mvn exec:exec -q -Dexec.executable=docker-build.sh
+                cd ./src/mavenitis && chmod +x docker-build.sh && mvn exec:exec -q -Dexec.executable=docker-build.sh
                                                 """
         }
       }
