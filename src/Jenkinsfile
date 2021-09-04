@@ -43,7 +43,7 @@ spec:
       steps {
         container('maven') {
           sh """
-                        ls
+                        mvn
                         // mvn package -DskipTests
                                                 """
         }
@@ -60,11 +60,13 @@ spec:
       }
     }
     stage('Docker Build') {
+    steps {
         container('docker') {
           sh """
              docker build -t sampleapp:$BUILD_NUMBER .
           """
         }
+      }
     }
   }
 }
