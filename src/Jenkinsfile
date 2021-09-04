@@ -12,7 +12,7 @@ podTemplate {
         stage('Build') {
             // Docker Build - to local image only
             // sh 'docker build -f ./src/Dockerfile -t sampleapp:latest .'
-            sh 'echo Building'
+            sh 'kubectl get pods'
         }
     }
 }
