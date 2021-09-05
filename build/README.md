@@ -23,6 +23,7 @@ I decided on doing option 1, as the more 'declarative' option, but had to eventu
 - https://stackoverflow.com/questions/42541356/how-to-create-a-self-signed-ssl-certificate-for-use-with-tomcat
 - https://codefresh.io/howtos/using-docker-maven-maven-docker/
 - https://pushbuildtestdeploy.com/jenkins-on-kubernetes-building-docker-images/
+- https://support.cloudbees.com/hc/en-us/articles/360038636511-Kubernetes-Plugin-Authenticate-with-a-ServiceAccount-to-a-remote-cluster
 
 ## Known limitations
 
