@@ -4,20 +4,35 @@ credentials:
     - credentials:
       - usernamePassword:
           id: "github"
-          password: "<secret>"
+          password: "__github-pass__"
           scope: GLOBAL
           username: "cronjevh"
       - basicSSHUserPrivateKey:
           id: "github-ssh"
           privateKeySource:
             directEntry:
-              privateKey: "<secret>"
+              privateKey: "__github-ssh__"
           scope: GLOBAL
           username: "cronjevh"
+      - string:
+          id: "jenkins-k8s-agent-serviceaccount"
+          scope: GLOBAL
+          secret: "__jenkins-k8s-agent-serviceaccount-token__"
 jenkins:
   agentProtocols:
   - "JNLP4-connect"
   - "Ping"
+  clouds:
+  - kubernetes:
+      containerCap: 5
+      containerCapStr: "5"
+      credentialsId: " jenkins-k8s-agent-serviceaccount"
+      jenkinsUrl: "http://jenkins-svc.jenkins-controller.svc.cluster.local:8080"
+      name: "kubernetes"
+      namespace: "jenkins-agent"
+      serverCertificate: |-
+        __jenkins-k8s-agent-serviceaccount-crt__
+      webSocket: true
   crumbIssuer:
     standard:
       excludeClientIPFromCrumb: false
@@ -26,10 +41,11 @@ jenkins:
   - "jenkins.diagnostics.ControllerExecutorsNoAgents"
   - "jenkins.diagnostics.SecurityIsOffMonitor"
   - "jenkins.diagnostics.RootUrlNotSetMonitor"
+  - "jenkins.diagnostics.ControllerExecutorsAgents"
   labelAtoms:
   - name: "master"
   markupFormatter: "plainText"
-  mode: NORMAL
+  mode: EXCLUSIVE
   myViewsTabBar: "standard"
   numExecutors: 2
   primaryView:
