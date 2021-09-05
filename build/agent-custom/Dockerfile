@@ -1,12 +1,11 @@
 FROM jenkins/jnlp-agent-docker:latest
 
 USER root
-
 ARG REFRESHED_AT
 ENV REFRESHED_AT $REFRESHED_AT
 
 ARG MAVEN_VERSION=3.6.3
-ARG USER_HOME_DIR="/root"
+ARG USER_HOME_DIR="/home/jenkins"
 ARG MAVEN_SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
 ARG MAVEN_BASE_URL=https://ftp.halifax.rwth-aachen.de/apache/maven/maven-3/${MAVEN_VERSION}/binaries
 
@@ -30,7 +29,6 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 # Install kubectl from Docker Hub.
 COPY --from=bitnami/kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
-RUN usermod -aG docker jenkins
 
 USER jenkins
 
