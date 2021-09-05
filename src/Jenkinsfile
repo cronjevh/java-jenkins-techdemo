@@ -22,6 +22,11 @@ spec:
         name: m2
       - mountPath: /var/run/docker.sock
         name: docker-sock
+  - name: powershell
+    image: mcr.microsoft.com/powershell:alpine-3.11
+    command:
+    - cat
+    tty: true
   volumes:
     - name: docker-sock
       hostPath:
@@ -35,6 +40,11 @@ spec:
   stages {
     stage('Build') {
       steps {
+        container('powershell') {
+          pwsh """
+                ls
+                                                """
+        }
         container('agent-custom') {
           sh """
                 cd ./src/mavenitis && chmod +x docker-build.sh && mvn exec:exec -q -Dexec.executable=docker-build.sh
