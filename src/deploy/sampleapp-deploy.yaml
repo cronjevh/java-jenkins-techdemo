@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sampleapp-deploy
+  namespace: sampleapp
 spec:
   selector:
     matchLabels:
