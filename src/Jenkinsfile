@@ -63,7 +63,7 @@ spec:
         container('agent-custom') {
           sh """
             echo Adding secret for keystorePass
-            kubectl delete secret sampleapp-secret -n sampleapp--ignore-not-found
+            kubectl delete secret sampleapp-secret -n sampleapp --ignore-not-found
             kubectl create secret generic sampleapp-secret -n sampleapp --from-file=./keystorePass
             
             echo kubectl apply k8s definitions from ./src/deploy
