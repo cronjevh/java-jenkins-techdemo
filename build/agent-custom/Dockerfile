@@ -30,6 +30,9 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 COPY --from=bitnami/kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
 
-USER jenkins
+# This shouldn't run as root, but after failing to find a solution with groupadd, chmod, etc
+# I'm rather leaving it as is. Risk is minimal as this is an ephemertal container
+# and I'm still going to try and run it with a separate service account scoped to a namespace
+# USER jenkins
 
 ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
