@@ -14,7 +14,7 @@ spec:
   containers:
   - name: agent-custom
     image: cronjevh/jenkins-maven-docker:0.0.6
-    
+
     securityContext:
       privileged: true
     command:
@@ -73,9 +73,9 @@ spec:
             kubectl create secret generic sampleapp-secret --from-file=./keystorePass
             
             echo kubectl apply k8s definitions from ./src/deploy
-            kubectl apply -f ./src/deploy/sampleapp-pvc
-            kubectl apply -f ./src/deploy/sampleapp-svc
-            kubectl apply -f ./src/deploy/sampleapp-deploy
+            kubectl apply -f ./src/deploy/sampleapp-pvc.yaml
+            kubectl apply -f ./src/deploy/sampleapp-svc.yaml
+            kubectl apply -f ./src/deploy/sampleapp-deploy.yaml
             
             echo Scaling down and scaling up deployment to get latest image
             kubectl scale deployment sampleapp-deploy --replicas=0 && kubectl scale deployment sampleapp-deploy --replicas=1
