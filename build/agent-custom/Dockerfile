@@ -31,4 +31,6 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 COPY --from=bitnami/kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
 
+USER jenkins
+
 ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
