@@ -42,7 +42,7 @@ spec:
       steps {
         container('powershell') {
           pwsh """
-                ls
+                & ./src/keypass-generate-and-replace.ps1
                                                 """
         }
         container('agent-custom') {
