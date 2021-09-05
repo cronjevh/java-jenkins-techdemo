@@ -14,8 +14,12 @@ spec:
   containers:
   - name: agent-custom
     image: cronjevh/jenkins-maven-docker:0.0.7
+    serviceAccountName: jcasc-jenkins
+    serviceAccount: jcasc-jenkins
     securityContext:
-      privileged: true
+      runAsUser: 1000
+      runAsNonRoot: true
+      fsGroup: 1000
     command:
     - cat
     tty: true
