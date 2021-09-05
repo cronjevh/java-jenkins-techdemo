@@ -30,6 +30,7 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 # Install kubectl from Docker Hub.
 COPY --from=bitnami/kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
+RUN usermod -aG docker jenkins
 
 USER jenkins
 

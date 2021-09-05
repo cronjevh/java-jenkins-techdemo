@@ -48,8 +48,6 @@ Jenkins builds and deploys the ./src/Dockerfile and updates a k8s deployment in 
 
 ## Known loose ends
 
-1. The original goal was to set up a ephemeral Jenkins builder job that would run as a k8s cronjob with everything defined from source. Moved to backlog for now.
-2. The hardcoded self-signed certificate is unsecure. An attempt was made to have this automatically generated during the Docker build process. For local environment testing demonstration purposes the hardcoded keystorepass is deemed to acceptable low risk.
 3. Dockerfiles should included automated test suites - there's little to test at this stage.
 4. [Snyk Docker security scans](https://dev.azure.com/cronjevh-techdemo/jenkins-java-techdemo/_workitems/edit/18) should be included as part of the Docker build process.
 
