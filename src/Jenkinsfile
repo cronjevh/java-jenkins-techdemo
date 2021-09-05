@@ -72,7 +72,7 @@ spec:
             kubectl apply -f ./src/deploy/sampleapp-deploy.yaml
             
             echo Scaling down and scaling up deployment to get latest image
-            kubectl scale deployment sampleapp-deploy --replicas=0 && kubectl scale deployment sampleapp-deploy --replicas=1
+            kubectl scale deployment sampleapp-deploy -n sampleapp --replicas=0 && kubectl scale deployment sampleapp-deploy -n sampleapp --replicas=1
 
             echo Cleaning up local scratch storage with replaced secrets
             rm -r ./src
