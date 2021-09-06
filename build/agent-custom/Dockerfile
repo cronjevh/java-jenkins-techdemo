@@ -33,6 +33,6 @@ RUN chmod +x /usr/local/bin/kubectl
 # This shouldn't run as root, but after failing to find a solution with groupadd, chmod, etc
 # I'm rather leaving it as is. Risk is minimal as this is an ephemertal container
 # and I'm still going to try and run it with a separate service account scoped to a namespace
-USER jenkins
+# USER jenkins
 
 ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
