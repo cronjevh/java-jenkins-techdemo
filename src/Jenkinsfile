@@ -13,7 +13,7 @@ spec:
   # Use service account that can deploy to all namespaces
   containers:
   - name: agent-custom
-    image: cronjevh/jenkins-maven-docker:0.0.7
+    image: cronjevh/jenkins-maven-docker:0.0.8
     command:
     - cat
     tty: true

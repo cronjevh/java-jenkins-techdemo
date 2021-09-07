@@ -1,3 +1,4 @@
+# manually built and pushed to cronjevh/jenkins-with-plugins:0.0.8 when needed
 FROM jenkins/jnlp-agent-docker:latest
 
 USER root
