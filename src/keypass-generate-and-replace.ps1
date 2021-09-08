@@ -13,7 +13,7 @@ function GeneratePassword {
     )
 
     do {
-        $password = -join (0..$length | % { $characterList | Get-Random })
+        $password = -join (0..$length | ForEach-Object { $characterList | Get-Random })
         [int]$hasLowerChar = $password -cmatch '[a-z]'
         [int]$hasUpperChar = $password -cmatch '[A-Z]'
         [int]$hasDigit = $password -match '[0-9]'
@@ -25,9 +25,17 @@ function GeneratePassword {
     $password
 }
 
-# Not bothering with error handling - run once script created per cluster
-kubectl delete secret sampleapp-secret
-
+Write-Host 'Generating random keystorePass value'
 $keystorePassVar = $(GeneratePassword -length 20)
-kubectl create secret generic sampleapp-secret --from-literal=keystorePass=$keystorePassVar
-docker build . -t sampleapp --build-arg $keystorePassVar
+
+Write-Host 'Doing variable replacement of keystorePass for text value __changeme__'
+$stringToReplace = '__changeme__'
+$filesToReplace = Get-ChildItem -Recurse -Path mavenitis | Select-String $stringToReplace | Select-Object -Unique Path
+
+foreach ($file in $filesToReplace.Path) {
+    ((Get-Content -path $file) -replace ($stringToReplace, $keystorePassVar)) | Set-Content -Path $file
+}
+
+Write-Host 'Agent secret stored temporarily in ephemeral agent storage to be applied in a later step with kubectl'
+$keystorePassVar | Out-File keystorePass
+

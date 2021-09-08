@@ -1,0 +1,28 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: jenkins-agent-full-access
+  namespace: sampleapp
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["batch"]
+  resources:
+  - jobs
+  - cronjobs
+  verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+   name: jenkins-agent-binding
+   namespace: sampleapp
+subjects:
+ - kind: ServiceAccount
+   name: jenkins-agent
+   namespace: jenkins-agent
+roleRef:
+   kind: Role
+   name: jenkins-agent-full-access
+   apiGroup: rbac.authorization.k8s.io

@@ -1,7 +1,18 @@
-# Run on docker for config and debugging purposes
-docker build . -t jenkins
+# From https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins
+# Requires kubernetes cluster with connected kubectl and helm3
+# helm repo add jenkins https://charts.jenkins.io
+# helm repo update
 
-# Deploy Jenkins to current kubectl context
-kubectl apply -f jenkins-pvc.yaml
-kubectl apply -f jenkins-svc.yaml
-kubectl apply -f jenkins-deploy.yaml
+kubectl create namespace jenkins-controller
+kubectl create namespace jenkins-agent
+kubectl create namespace sampleapp
+
+helm upgrade --install jenkins  `
+    -n jenkins-controller `
+    -f values.yaml `
+    jenkins/jenkins
+
+kubectl apply -f additional-rbac.yaml
+
+# To clean up when when
+# helm delete jenkins -n jenkins-controller

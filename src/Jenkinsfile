@@ -1,0 +1,82 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'maven'
+      defaultContainer 'agent-custom'
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+labels:
+  component: ci
+spec:
+  # Use service account that can deploy to all namespaces
+  containers:
+  - name: agent-custom
+    image: cronjevh/jenkins-maven-docker:0.0.8
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+      - mountPath: /var/run/docker.sock
+        name: docker-sock
+  - name: powershell
+    image: mcr.microsoft.com/powershell:alpine-3.11
+    command:
+    - cat
+    tty: true
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+"""
+}
+   }
+  stages {
+    stage('Build') {
+      steps {
+        container('powershell') {
+          pwsh """
+                & ./src/keypass-generate-and-replace.ps1
+                                                """
+        }
+        container('agent-custom') {
+          sh """
+                cd ./src/mavenitis && chmod +x docker-build.sh && mvn exec:exec -q -Dexec.executable=docker-build.sh
+                                                """
+        }
+      }
+    }
+    stage('Test') {
+      steps {
+        container('agent-custom') {
+          sh """
+            echo run tests
+          """
+        }
+      }
+    }
+    stage('Deploy') {
+    steps {
+        container('agent-custom') {
+          sh """
+            echo Adding secret for keystorePass
+            kubectl delete secret sampleapp-secret -n sampleapp --ignore-not-found
+            kubectl create secret generic sampleapp-secret -n sampleapp --from-file=./keystorePass
+            
+            echo kubectl apply k8s definitions from ./src/deploy
+            kubectl apply -f ./src/deploy/sampleapp-pvc.yaml
+            kubectl apply -f ./src/deploy/sampleapp-svc.yaml
+            kubectl apply -f ./src/deploy/sampleapp-deploy.yaml
+            
+            echo Scaling down and scaling up deployment to get latest image
+            kubectl scale deployment sampleapp-deploy -n sampleapp --replicas=0 && kubectl scale deployment sampleapp-deploy -n sampleapp --replicas=1
+
+            echo Cleaning up local scratch storage with replaced secrets
+            rm -r ./src
+          """
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sampleapp-deploy
+  namespace: sampleapp
 spec:
   selector:
     matchLabels:
@@ -28,7 +29,7 @@ spec:
         - containerPort: 8080
         - containerPort: 8443
         volumeMounts:
-          - mountPath: /opt/bitnami/tomcat/logs
+          - mountPath: /usr/local/tomcat/logs
             name: sampleapp-volume
       volumes:
         - name: sampleapp-volume
